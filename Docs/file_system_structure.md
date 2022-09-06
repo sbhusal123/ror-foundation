@@ -1,5 +1,6 @@
 # Directory Structure and Files
 - ``.keep`` **allows git to keep the empty file.**
+- Any files starting with `_` underscore => partials.
 
 ```bash
 ├── app
