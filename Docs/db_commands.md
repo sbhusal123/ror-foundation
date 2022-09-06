@@ -1,0 +1,20 @@
+# Databases Commands:
+- `db:create` creates db for current env.
+- `db:create:all` creates db for all env.
+- `db:drop` drops db for current env.
+- `db:drop:all` drops db for all envs.
+- `db:migrate` runs migrn for current envs that havent run yet.
+- `db:migrate:up` runs one specific migration.
+- `db:migrate:down` rolls back one specific migration.
+- `db:migrate:status` shows current migration status.
+- `db:rollback` rolls back last migration.
+- `db:forward` advances the current schema version to next one.
+- `db:seed` runs the **db/seed.rb** file.
+- `db:schama:load` loads the schema into current env.
+- `db:schema:dump` dumps the current env schemas (creates dbs as well).
+- `db:setup` runs **db:schema:load** and **db:seed**.
+- `db:reset` runs **db:drop** and **db:setup**.
+- `db:migrate:redo` runs.
+    -  **db:migrate:down and db:migrate:up** or
+    - **db:rollback db:migrate:migrate** depending upon specific migration
+- `db:migrate:reset` runs **db:drop db:create db:migrate**
