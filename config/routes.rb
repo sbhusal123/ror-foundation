@@ -3,10 +3,15 @@ Rails.application.routes.draw do
   get "contact", to: "pages#contact"
   get "home", to: "pages#home"
   get 'about', to: "pages#about"
+  get "error", to: "pages#error"
+
   get 'google', to: redirect("https://google.com")
 
   resources :projects
 
   root 'pages#home'
+
+  # error routes, searches from the top
+  get "*path", to: redirect("/error")
 
 end

@@ -10,4 +10,8 @@ class PagesController < ApplicationController
     # this passes context to view, template as a var
     @projects = Project.all
   end
+
+  def error
+    
+  end
 end
