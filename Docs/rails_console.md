@@ -104,3 +104,46 @@ irb(main):013:0> p.delete
   Project Destroy (94.6ms)  DELETE FROM "projects" WHERE "projects"."id" = ?  [["id", 5]]
 => #<Project id: 5, title: "last updated", description: "This is project 1 description.", percent_complete: nil, created_at: "2022-09-08 11:18:58.611470000 +0000", updated_at: "2022-09-08 11:34:56.729142000 +0000">
 ```
+
+**Find By Id (Multiple)**
+- `<Model>.find([<id>, <id>])`
+- Returns an array of items
+
+```rb
+irb(main):009:0> a = Project.find([1, 3, 5])
+irb(main):009:0> a
+  Project Load (0.6ms)  SELECT "projects".* FROM "projects" WHERE "projects"."id" IN (?, ?, ?)  [["id", 1], ["id", 3], ["id", 5]]
+=> [#<Project id: 1, title: "Project 0", description: "This is project 0", percent_complete: nil, created_at: "2022-09-12 08:22:40.098896000 +0000", updated_at: "2022-09-12 08:22:40.098896000 +0000">, #<Project id: 3, title: "Project 2", description: "This is project 2", percent_complete: nil, created_at: "2022-09-12 08:22:40.119145000 +0000", updated_at: "2022-09-12 08:22:40.119145000 +0000">, #<Project id: 5, title: "Project 4", description: "This is project 4", percent_complete: nil, created_at: "2022-09-12 08:22:40.127831000 +0000", updated_at: "2022-09-12 08:22:40.127831000 +0000">]
+irb(main):010:0> 
+```
+
+**Iterating through array of objects**
+irb(main):016:0> a.each do |pro|
+irb(main):017:1*  puts pro.description
+irb(main):018:1> end
+This is project 0
+This is project 1
+This is project 2
+```
+```
+
+**Where Query**
+- `<Model>.where(<field>: "<val>")`
+- `<Model>.where.not(<field>: "<val>")`
+- Returns an iteratable.
+
+```rb
+irb(main):001:0> p = Project.where(title: "Project 2")
+   (0.3ms)  SELECT sqlite_version(*)
+  Project Load (0.2ms)  SELECT "projects".* FROM "projects" WHERE "projects"."title" = ? /* loading for inspect */ LIMIT ?  [["title", "Project 2"], ["LIMIT", 11]]
+=> #<ActiveRecord::Relation [#<Project id: 3, title: "Project 2", description: "This is project 2", percent_complete: nil, created_at: "2022-09-12 08:22:40.119145000 +0000", updated_at: "2022-09-12 08:22:40.119145000 +0000">]>
+
+irb(main):002:0> p = Project.where.not(title: "Project 2")
+  Project Load (0.9ms)  SELECT "projects".* FROM "projects" WHERE "projects"."title" != ? /* loading for inspect */ LIMIT ?  [["title", "Project 2"], ["LIMIT", 11]]
+=> #<ActiveRecord::Relation [#<Project id: 1, title: "Project 0", description: "This is project 0", percent_complete: nil, created_at: "2022-09-12 08:22:40.098896000 +0000", updated_at: "2022-09-12 08:22:40.098896000 +0000">, #<Project id: 2, title: "Project 1", description: "This is project 1", percent_complete: nil, created_at: "2022-09-12 08:22:40.110935000 +0000", updated_at: "2022-09-12 08:22:40.110935000 +0000">, #<Project id: 4, title: "Project 3", description: "This is project 3", percent_complete: nil, created_at: "2022-09-12 08:22:40.123889000 +0000", updated_at: "2022-09-12 08:22:40.123889000 +0000">, #<Project id: 5, title: "Project 4", description: "This is project 4", percent_complete: nil, created_at: "2022-09-12 08:22:40.127831000 +0000", updated_at: "2022-09-12 08:22:40.127831000 +0000">, #<Project id: 6, title: "Project 5", description: "This is project 5", percent_complete: nil, created_at: "2022-09-12 08:22:40.131160000 +0000", updated_at: "2022-09-12 08:22:40.131160000 +0000">]>
+
+# p.first.title
+```
+
+
+
