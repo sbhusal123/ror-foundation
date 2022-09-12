@@ -7,5 +7,7 @@ class PagesController < ApplicationController
   end
 
   def home
+    # this passes context to view, template as a var
+    @projects = Project.all
   end
 end

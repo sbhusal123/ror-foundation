@@ -124,12 +124,15 @@ end
 ```
 
 **Customizing Routes**
+- Root route: ``root "<Controller>#<Method>"``
+- Norma restful routes: `verb "<uri>", to: "<controller>#<Method>"`
 
 ```rb
-verb "<uri>", to: "<controller>#<Method>"
 # example
 get 'about', to: "pages#about"
+root "page#home"
 ```
+
 Where:
 - uri is the url
 - very can be rest verb get, post, put, patch, ...
