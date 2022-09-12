@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get "contact", to: "pages#contact"
   get "home", to: "pages#home"
   get 'about', to: "pages#about"
+  get 'google', to: redirect("https://google.com")
 
   resources :projects
 
