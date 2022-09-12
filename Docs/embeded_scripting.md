@@ -23,3 +23,15 @@
 ```
 
 > Notice `=` difference in between above two scripts.
+
+## Using Partials:
+- Filename starting with `_` => partials
+
+Including partials, rendering on view
+
+```erb
+<%= render "shared/nav" %>
+```
+
+- File location: `views/shared/_nav.html.erb`
+
