@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get "home", to: "pages#home"
   get 'about', to: "pages#about"
   get "error", to: "pages#error"
+  get "blog", to: "pages#blog"
 
   get 'google', to: redirect("https://google.com")
 
