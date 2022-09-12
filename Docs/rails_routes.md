@@ -1,5 +1,6 @@
 # Rails Routes
 - Core routes resource registration: `config/routes.rb`
+- [Docs](https://guides.rubyonrails.org/routing.html)
 
 ## List all routes:
 - `rails routes`
@@ -121,3 +122,16 @@ end
   get 'pages/about'
   get 'pages/home'
 ```
+
+**Customizing Routes**
+
+```rb
+verb "<uri>", to: "<controller>#<Method>"
+# example
+get 'about', to: "pages#about"
+```
+Where:
+- uri is the url
+- very can be rest verb get, post, put, patch, ...
+- controller is the controller name
+- method is the func name, method name for handellin the request for that uri.
