@@ -10,6 +10,10 @@ class ProjectsController < ApplicationController
     # @projects = Project.where.not(title: "")
     # @projects = Project.where.not(title: "").limit(5)
     @projects = Project.all
+
+    # using custom scopes, defined in models
+    # @projects = Project.almost_completed
+    # @projects = Project.still_needs_some_work
   end
 
   # GET /projects/1 or /projects/1.json
