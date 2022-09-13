@@ -1,4 +1,6 @@
 class ProjectsController < ApplicationController
+
+  # set_project (private) method gets called before show, edit, update and destory paths controller reaches a point of execution.
   before_action :set_project, only: %i[ show edit update destroy ]
 
   # GET /projects or /projects.json
@@ -22,7 +24,7 @@ class ProjectsController < ApplicationController
   # POST /projects or /projects.json
   def create
     @project = Project.new(project_params)
-
+    
     respond_to do |format|
       if @project.save
         format.html { redirect_to project_url(@project), notice: "Project was successfully created." }
@@ -52,7 +54,7 @@ class ProjectsController < ApplicationController
     @project.destroy
 
     respond_to do |format|
-      format.html { redirect_to projects_url, notice: "Project was successfully destroyed." }
+      format.html { redirect_to projects_url, notice: "Project was successfully deleted." }
       format.json { head :no_content }
     end
   end
