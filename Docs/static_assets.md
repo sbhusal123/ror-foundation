@@ -48,4 +48,15 @@ app
 
 Note: **Any Styles files created on ``app/assets/stylesheets`` will be applied to `application.css`** because of `*= require_tree .`
 
-## Fonts
+## Integrating Fonts, Configuration
+- Configuring fonts to be integrated.
+- Fonts directory: `app/assets/fonts`
+
+**config/application.rb**
+```rb
+config.assets.enabled = true
+config.assets.paths << Ruby.root.join("/app/assets/fonts")
+```
+
+> Fonts placed inside ``/app/assets/fonts/*``
+
