@@ -116,7 +116,7 @@ irb(main):002:0> Task.create!(title: "My first task", description: "asdlkj", pro
 => #<Task id: 1, title: "My first task", description: "asdlkj", project_id: 6, created_at: "2022-09-13 10:24:57.089467000 +0000", updated_at: "2022-09-13 10:24:57.089467000 +0000">
 
 # check the records
-irb(main):001:0> Project.last.task
+irb(main):001:0> Project.last.tasks
    (0.2ms)  SELECT sqlite_version(*)
   Project Load (0.1ms)  SELECT "projects".* FROM "projects" ORDER BY "projects"."id" DESC LIMIT ?  [["LIMIT", 1]]
   Task Load (0.1ms)  SELECT "tasks".* FROM "tasks" WHERE "tasks"."project_id" = ? /* loading for inspect */ LIMIT ?  [["project_id", 6], ["LIMIT", 11]]
@@ -142,4 +142,90 @@ class AddCompletedToTasks < ActiveRecord::Migration[6.1]
     add_column :tasks, :completed, :boolean
   end
 end
+```
+
+
+## Integrating callbacks, after_save
+
+```rb
+class Task < ApplicationRecord
+  # Task.last.project
+  belongs_to :project
+
+  scope :completed, -> {where("completed=true")}
+
+  # on save updates the percent completed for related project
+  after_save :update_percent_completed if :mark_completed?
+
+  def mark_completed?
+    # Note: this doesnt doesnt perform scoped query call.
+    self.completed == true
+  end
+
+  def update_percent_completed
+      project = Project.find(self.project_id)
+      count_of_completed_tasks = project.tasks.completed.count
+      count_of_total_tasks = project.tasks.count
+      project.update!(percent_complete: Counter.calculate_percent_complete(count_of_completed_tasks, count_of_total_tasks))
+  end
+end
+```
+
+**Testing on console**
+
+```rb
+
+# Note the percent complete
+irb(main):001:0> Project.last
+   (0.7ms)  SELECT sqlite_version(*)
+  Project Load (0.1ms)  SELECT "projects".* FROM "projects" ORDER BY "projects"."id" DESC LIMIT ?  [["LIMIT", 1]]
+=> #<Project id: 6, title: "Project 5", description: "This is project 5", percent_complete: 0.0, created_at: "2022-09-12 08:22:40.131160000 +0000", updated_at: "2022-09-13 11:10:37.710385000 +0000">
+
+# list of tasks for last project, notice the count
+irb(main):002:0> Project.last.tasks
+  Project Load (0.3ms)  SELECT "projects".* FROM "projects" ORDER BY "projects"."id" DESC LIMIT ?  [["LIMIT", 1]]
+  Task Load (0.3ms)  SELECT "tasks".* FROM "tasks" WHERE "tasks"."project_id" = ? /* loading for inspect */ LIMIT ?  [["project_id", 6], ["LIMIT", 11]]
+=> #<ActiveRecord::Associations::CollectionProxy [#<Task id: 1, title: "My first task", description: "asdlkj", project_id: 6, created_at: "2022-09-13 10:24:57.089467000 +0000", updated_at: "2022-09-13 10:24:57.089467000 +0000", completed: nil>, #<Task id: 2, title: "My second task", description: "asdlkj", project_id: 6, created_at: "2022-09-13 10:26:29.282598000 +0000", updated_at: "2022-09-13 11:10:53.218693000 +0000", completed: false>]>
+
+# notice the project_id
+irb(main):003:0> Task.last
+  Task Load (0.4ms)  SELECT "tasks".* FROM "tasks" ORDER BY "tasks"."id" DESC LIMIT ?  [["LIMIT", 1]]
+=> #<Task id: 2, title: "My second task", description: "asdlkj", project_id: 6, created_at: "2022-09-13 10:26:29.282598000 +0000", updated_at: "2022-09-13 11:10:53.218693000 +0000", completed: false>
+
+# updating task as completed
+irb(main):004:0> Task.last.update(completed: true)
+  Task Load (0.3ms)  SELECT "tasks".* FROM "tasks" ORDER BY "tasks"."id" DESC LIMIT ?  [["LIMIT", 1]]
+  TRANSACTION (0.1ms)  begin transaction
+  Project Load (0.3ms)  SELECT "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?  [["id", 6], ["LIMIT", 1]]
+  Task Update (0.6ms)  UPDATE "tasks" SET "updated_at" = ?, "completed" = ? WHERE "tasks"."id" = ?  [["updated_at", "2022-09-13 11:11:48.761705"], ["completed", 1], ["id", 2]]
+  Project Load (0.1ms)  SELECT "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?  [["id", 6], ["LIMIT", 1]]
+   (0.2ms)  SELECT COUNT(*) FROM "tasks" WHERE "tasks"."project_id" = ? AND (completed=true)  [["project_id", 6]]
+   (0.2ms)  SELECT COUNT(*) FROM "tasks" WHERE "tasks"."project_id" = ?  [["project_id", 6]]
+  Project Update (0.2ms)  UPDATE "projects" SET "percent_complete" = ?, "updated_at" = ? WHERE "projects"."id" = ?  [["percent_complete", 50.0], ["updated_at", "2022-09-13 11:11:48.771176"], ["id", 6]]
+  TRANSACTION (24.2ms)  commit transaction
+=> true
+
+# finally, notice the percent completed
+irb(main):005:0> Project.last
+  Project Load (0.3ms)  SELECT "projects".* FROM "projects" ORDER BY "projects"."id" DESC LIMIT ?  [["LIMIT", 1]]
+=> #<Project id: 6, title: "Project 5", description: "This is project 5", percent_complete: 0.5e2, created_at: "2022-09-12 08:22:40.131160000 +0000", updated_at: "2022-09-13 11:11:48.771176000 +0000">
+
+
+# marking task as incomplete
+irb(main):006:0> Task.last.update(completed: false)
+  Task Load (0.3ms)  SELECT "tasks".* FROM "tasks" ORDER BY "tasks"."id" DESC LIMIT ?  [["LIMIT", 1]]
+  TRANSACTION (0.1ms)  begin transaction
+  Project Load (0.2ms)  SELECT "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?  [["id", 6], ["LIMIT", 1]]
+  Task Update (0.5ms)  UPDATE "tasks" SET "updated_at" = ?, "completed" = ? WHERE "tasks"."id" = ?  [["updated_at", "2022-09-13 11:15:17.992722"], ["completed", 0], ["id", 2]]
+  Project Load (0.2ms)  SELECT "projects".* FROM "projects" WHERE "projects"."id" = ? LIMIT ?  [["id", 6], ["LIMIT", 1]]
+   (0.2ms)  SELECT COUNT(*) FROM "tasks" WHERE "tasks"."project_id" = ? AND (completed=true)  [["project_id", 6]]
+   (0.2ms)  SELECT COUNT(*) FROM "tasks" WHERE "tasks"."project_id" = ?  [["project_id", 6]]
+  Project Update (0.3ms)  UPDATE "projects" SET "percent_complete" = ?, "updated_at" = ? WHERE "projects"."id" = ?  [["percent_complete", 0.0], ["updated_at", "2022-09-13 11:15:18.000379"], ["id", 6]]
+  TRANSACTION (5.9ms)  commit transaction
+=> true
+
+# notice the percent complete
+irb(main):007:0> Project.last
+  Project Load (0.2ms)  SELECT "projects".* FROM "projects" ORDER BY "projects"."id" DESC LIMIT ?  [["LIMIT", 1]]
+=> #<Project id: 6, title: "Project 5", description: "This is project 5", percent_complete: 0.0, created_at: "2022-09-12 08:22:40.131160000 +0000", updated_at: "2022-09-13 11:15:18.000379000 +0000">
 ```

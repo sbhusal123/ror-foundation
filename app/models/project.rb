@@ -6,9 +6,9 @@ class Project < ApplicationRecord
     # Database Relationships
 
     # Project.first.task
-    has_many :task
+    has_many :tasks
 
-    validates_presence_of :title, :description, :percent_completes
+    validates_presence_of :title, :description, :percent_complete
 
     scope :almost_completed, -> { where('percent_complete > 70.0') }
     scope :still_needs_some_work, -> { where('percent_complete < 75.0') }
