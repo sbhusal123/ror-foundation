@@ -1,5 +1,6 @@
 # Rails Models
 - Models : `app/models/*`
+- Docs: [Here](https://guides.rubyonrails.org/active_record_basics.html)
 
 ## Purpose
 - Custom Scopes
@@ -26,7 +27,7 @@ Project.almost_completed
 
 **ii. Defaults fields value**
 - Custom `initializer`.
-- `after_initialize`
+- `after_initialize :`
 
 ```rb
 ...
@@ -38,4 +39,13 @@ Project.almost_completed
         self.percent_complete ||= 0.0
     end
 ...
+```
+
+**iii. Validate non empty, presence of fields:**
+- `validates_presence_of :field1, :field2`
+
+```rb
+.....
+        validates_presence_of :title, :description
+.....
 ```
