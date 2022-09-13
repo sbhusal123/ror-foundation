@@ -10,7 +10,10 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body> 
+  <body>
+    <div class="logo">
+      <%= image_tag("logos/logo.png", width: "150px") %>
+    </div>
     <%= render "shared/nav" %>
     <%= yield %>
   </body>
