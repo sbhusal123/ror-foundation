@@ -145,5 +145,13 @@ irb(main):002:0> p = Project.where.not(title: "Project 2")
 # p.first.title
 ```
 
+- **Chaining**: `Project.where.not(title: "This is project 1").limit(10)`
 
 
+```sh
+irb(main):001:0> Project.where.not(title: "This is project 1").limit(10)
+
+   (0.4ms)  SELECT sqlite_version(*)
+  Project Load (0.2ms)  SELECT "projects".* FROM "projects" WHERE "projects"."title" != ? /* loading for inspect */ LIMIT ?  [["title", "This is project 1"], ["LIMIT", 10]]
+=> #<ActiveRecord::Relation [#<Project id: 1, title: "Project 0", description: "This is project 0", percent_complete: 0.2e2, created_at: "2022-09-12 08:22:40.098896000 +0000", updated_at: "2022-09-13 04:21:41.544245000 +0000">, #<Project id: 2, title: "Project 1", description: "This is project 1", percent_complete: nil, created_at: "2022-09-12 08:22:40.110935000 +0000", updated_at: "2022-09-12 08:22:40.110935000 +0000">, #<Project id: 3, title: "Project 2", description: "This is project 2", percent_complete: nil, created_at: "2022-09-12 08:22:40.119145000 +0000", updated_at: "2022-09-12 08:22:40.119145000 +0000">, #<Project id: 4, title: "Project 3", description: "This is project 3", percent_complete: nil, created_at: "2022-09-12 08:22:40.123889000 +0000", updated_at: "2022-09-12 08:22:40.123889000 +0000">, #<Project id: 5, title: "Project 4", description: "This is project 4", percent_complete: nil, created_at: "2022-09-12 08:22:40.127831000 +0000", updated_at: "2022-09-12 08:22:40.127831000 +0000">, #<Project id: 6, title: "Project 5", description: "This is project 5", percent_complete: nil, created_at: "2022-09-12 08:22:40.131160000 +0000", updated_at: "2022-09-12 08:22:40.131160000 +0000">]>
+```

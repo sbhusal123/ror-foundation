@@ -5,6 +5,10 @@ class ProjectsController < ApplicationController
 
   # GET /projects or /projects.json
   def index
+    # @projects = Project.limit(5)
+    # @projects = Project.where(title: "")
+    # @projects = Project.where.not(title: "")
+    # @projects = Project.where.not(title: "").limit(5)
     @projects = Project.all
   end
 
