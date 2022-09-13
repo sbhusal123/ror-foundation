@@ -229,3 +229,32 @@ irb(main):007:0> Project.last
   Project Load (0.2ms)  SELECT "projects".* FROM "projects" ORDER BY "projects"."id" DESC LIMIT ?  [["LIMIT", 1]]
 => #<Project id: 6, title: "Project 5", description: "This is project 5", percent_complete: 0.0, created_at: "2022-09-12 08:22:40.131160000 +0000", updated_at: "2022-09-13 11:15:18.000379000 +0000">
 ```
+
+## Changing Data Type of Column
+- `rails g migrate change_data_type_for_<field_name>`
+- Modify the generated migration file.
+
+```rb
+class ChangeDataTypeForStage < ActiveRecord::Migration[6.1]
+  def change
+    change_column :projects, :stage, :string
+  end
+end
+
+```
+- rake db:migrate
+
+## Delete Column For DB Tables
+- `rails g migrate remove_<field>_from_<table> <field>:<type>`
+
+**Scaffold Code**
+
+```rb
+class MigrationName < ActiveRecord:Migration
+
+  def change
+    remove_column :<table>, :<field>, :<type>
+  end
+
+end
+```
