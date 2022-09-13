@@ -52,9 +52,9 @@ Project.almost_completed
 .....
 ```
 
-## Generating Models
+## Generating Models, adding fields
 - `rails g model <ModelName> <field>:<d_type> <field>:<d_type> <rel_name>:references`
-- Mirate: `rake db:migrate`
+- Mirate: `rake db:migrate` after migration schema file is updated.
 
 **Example: Generating with references:**
 ```sh
@@ -129,3 +129,17 @@ irb(main):001:0> Task.first.project
 => #<Project id: 6, title: "Project 5", description: "This is project 5", percent_complete: 0.8e2, created_at: "2022-09-12 08:22:40.131160000 +0000", updated_at: "2022-09-13 09:37:12.703013000 +0000">
 ```
 
+
+**Adding database fields:**
+- ``rails g migration add_<field_name>_to_<model> <field>:<d_type>``
+- ``rake db:migrate`` after migration: schema is changed: `t.boolean "completed"`
+- Generated Migrations Files
+
+```rb
+class AddCompletedToTasks < ActiveRecord::Migration[6.1]
+  def change
+   # action    :model  :field      :type
+    add_column :tasks, :completed, :boolean
+  end
+end
+```
