@@ -5,6 +5,9 @@ class Project < ApplicationRecord
     # Integrate Callbacks -> Sort of like signals
     # Database Relationships
 
+    # Project.first.task
+    has_many :task
+
     validates_presence_of :title, :description, :percent_complete
 
     scope :almost_completed, -> { where('percent_complete > 70.0') }
