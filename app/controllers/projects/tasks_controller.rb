@@ -1,6 +1,8 @@
-class TasksController < ApplicationController
+# :: -> Controller Nesting
+class Projects::TasksController < ApplicationController
 
   before_action :set_task, only: %i[ show edit update destroy ]
+  before action :set_project, only: %i [show new edit create update destroy]
 
   def show
   end
@@ -14,6 +16,7 @@ class TasksController < ApplicationController
 
   def create
     @task = Task.new(task_params)
+    @task.project_id = @project.id
 
     respond_to do |format|
       if @task.save
@@ -53,7 +56,13 @@ class TasksController < ApplicationController
       @task = Task.find(params[:id])
     end
 
-    def task_params
-      params.require(:task).permit(:title, :description, :project_id, :completed, :task_file)
+    # .com/projects/<project_id>/tasks/<id>
+    def set_project
+      @project = Projects.find(params[:project_id])
     end
+
+    def task_params
+      params.require(:tasks).permit(:title, :description, :project_id, :completed, :task_file)
+    end
+
 end
