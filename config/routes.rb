@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'tasks/show'
+  get 'tasks/new'
+  get 'tasks/edit'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   get "contact", to: "pages#contact"
   get "home", to: "pages#home"
