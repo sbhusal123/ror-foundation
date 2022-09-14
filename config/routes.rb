@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-  get 'tasks/show'
-  get 'tasks/new'
-  get 'tasks/edit'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+    # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  # all of the route items, just like project except the index
+
   get "contact", to: "pages#contact"
   get "home", to: "pages#home"
   get 'about', to: "pages#about"
@@ -11,7 +11,10 @@ Rails.application.routes.draw do
 
   get 'google', to: redirect("https://google.com")
 
-  resources :projects
+  # nested: /projects/5/tasks/1
+  resources :projects do 
+    resources :tasks, except: [:index], controller: 'projects/tasks'
+  end
 
   root 'pages#home'
 
