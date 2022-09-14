@@ -1,2 +1,23 @@
-<h1>Tasks#show</h1>
-<p>Find me in app/views/tasks/show.html.erb</p>
+<hr>
+<h3><%= @task.title %></h3>
+
+<p> <b>Title: </b> <%= @task.title %> </p>
+<p><b>Description: </b> <%= @task.description %> </p>
+
+<% if @task.created_at != @task.updated_at %>
+    <h4>Updated: <%= @task.updated_at %> </h4>
+<% end %>
+
+<% if @task.completed == true %>
+    <p> <em>Task is Completed</em> </p>
+<% else %>
+    <p> <em>Task is pending.</em> </p>
+<% end %>
+
+<% unless @task.task_file.blank? %>
+    <p><%= link_to "Attachement", @task.task_file.to_s %></p>
+<% end %>
+
+<%= link_to "Edit", edit_project_task_path(@task.project_id, @task.id) %>
+
+<%= link_to "Back to project", project_path(@task.project_id) %>
