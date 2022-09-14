@@ -1,5 +1,6 @@
 class TasksController < ApplicationController
-  before_action :set_task, only [:show, :edit, :update, :destroy]
+
+  before_action :set_task, only: %i[ show edit update destroy ]
 
   def show
   end
@@ -49,11 +50,10 @@ class TasksController < ApplicationController
   private
 
     def set_task
-      # TODO
+      @task = Task.find(params[:id])
     end
 
     def task_params
-      # TODO
+      params.require(:task).permit(:title, :description, :project_id, :completed, :task_file)
     end
-
 end
