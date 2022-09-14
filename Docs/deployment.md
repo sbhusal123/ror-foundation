@@ -10,3 +10,5 @@
 
 # Commands:
 - Rails console: ``heroku run rails c``
+
+[S3 Bucket And Credentials Setup](https://www.youtube.com/watch?v=nzLMA9WZqMM)
