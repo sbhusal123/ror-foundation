@@ -14,7 +14,10 @@
     <div class="logo">
       <%= image_tag("logos/logo.png", width: "150px") %>
     </div>
+
     <%= render "shared/nav" %>
+    <%= render "shared/alerts" %>
+
     <%= yield %>
   </body>
 </html>
