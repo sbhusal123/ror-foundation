@@ -26,6 +26,18 @@ gem 'sassc', '~> 2.1.0'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
+# for file uploads
+gem 'carrierwave', '~> 2.0'
+
+# image filters, autosiing
+gem 'mini_magick'
+
+# api aws connctor
+gem 'fog-aws'
+
+# handling credentials securly like .env files
+gem 'figaro'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
