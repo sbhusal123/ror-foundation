@@ -4,6 +4,10 @@ class Task < ApplicationRecord
 
   scope :completed, -> {where("completed=true")}
 
+  # uploader
+  # mount uploader: field  ,   handler
+  # mount_uploader :task_file, TaskFileUploader
+
   after_save :update_percent_complete if :mark_completed?
 
   def mark_completed?
